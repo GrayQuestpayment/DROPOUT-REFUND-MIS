@@ -3,49 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dropout Summary Report — Cyber Battle MIS Dashboard</title>
+  <title>Dropout Summary Report — Executive MIS Dashboard</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Orbitron & Rajdhani Gamer Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;600;700;800&family=Orbitron:wght@600;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-main: #07060d;
-      --bg-card: rgba(15, 11, 28, 0.78);
-      --border-color: rgba(168, 85, 247, 0.35);
+      --bg-main: #0a0e17;
+      --bg-card: rgba(13, 20, 36, 0.82);
+      --border-color: rgba(234, 179, 8, 0.35);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --rgb-purple: #a855f7;
-      --rgb-amber: #f59e0b;
-      --rgb-cyan: #00f0ff;
-      --rgb-emerald: #10b981;
+      --accent-primary: #eab308;
+      --accent-secondary: #f59e0b;
+      --accent-glow: 0 0 25px rgba(234, 179, 8, 0.4);
     }
 
     body {
       background-color: var(--bg-main);
-      background-image: 
-        radial-gradient(circle at 50% 10%, rgba(147, 51, 234, 0.25) 0%, transparent 45%),
-        radial-gradient(circle at 10% 40%, rgba(249, 115, 22, 0.2) 0%, transparent 40%),
-        radial-gradient(circle at 90% 45%, rgba(6, 182, 212, 0.22) 0%, transparent 40%),
-        radial-gradient(circle at 50% 95%, rgba(234, 88, 12, 0.25) 0%, transparent 50%);
-      background-attachment: fixed;
       color: var(--text-main);
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
+      transition: background 0.4s ease, color 0.4s ease;
     }
 
-    .font-gaming {
-      font-family: 'Orbitron', sans-serif;
-    }
-
-    /* Ambient Cyber Glow Matrix Canvas */
-    #emberCanvas {
+    /* Ambient Particle Canvas */
+    #ambientCanvas {
       position: fixed;
       top: 0;
       left: 0;
@@ -60,160 +50,171 @@
       z-index: 1;
     }
 
-    /* Glassmorphism Battle Station Cards with RGB Edge Lighting */
-    .gamer-card {
+    /* Dynamic Glassmorphic Theme Cards */
+    .theme-card {
       background: var(--bg-card);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border-color);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.08);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .gamer-card:hover {
-      border-color: rgba(0, 240, 255, 0.65);
-      box-shadow: 0 0 25px rgba(168, 85, 247, 0.35), 0 0 45px rgba(245, 158, 11, 0.25);
+    .theme-card:hover {
+      border-color: var(--accent-primary);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), var(--accent-glow);
       transform: translateY(-2px);
     }
 
-    .rgb-gradient-text {
-      background: linear-gradient(135deg, #c084fc 0%, #00f0ff 50%, #fb923c 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .gamer-btn-primary {
-      background: linear-gradient(135deg, #9333ea 0%, #2563eb 50%, #ea580c 100%);
-      color: #ffffff;
-      box-shadow: 0 0 20px rgba(147, 51, 234, 0.45);
+    .theme-btn-primary {
+      background: var(--accent-primary);
+      color: #000000;
+      font-weight: 800;
+      box-shadow: var(--accent-glow);
       transition: all 0.3s ease;
-      font-family: 'Orbitron', sans-serif;
     }
-    .gamer-btn-primary:hover {
-      filter: brightness(1.25);
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+    .theme-btn-primary:hover {
+      filter: brightness(1.2);
       transform: scale(1.02);
     }
 
+    /* Custom Theme Select Dropdown */
+    .theme-select {
+      background-color: rgba(10, 14, 26, 0.95);
+      border: 1.5px solid var(--accent-primary);
+      color: var(--text-main);
+      font-weight: 700;
+      box-shadow: var(--accent-glow);
+    }
+
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: rgba(7, 6, 13, 0.8); }
-    ::-webkit-scrollbar-thumb { background: #9333ea; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #00f0ff; }
+    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.6); }
+    ::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
   </style>
 </head>
 <body class="p-3 sm:p-6 lg:p-8">
 
-  <!-- Ambient Battle Particle Canvas -->
-  <canvas id="emberCanvas"></canvas>
+  <!-- Ambient Particle Canvas -->
+  <canvas id="ambientCanvas"></canvas>
 
   <div class="app-container max-w-7xl mx-auto space-y-6">
 
-    <!-- Header Banner -->
-    <header class="gamer-card p-6 rounded-3xl flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 border">
+    <!-- Top Header Navigation with Top-Right Theme Selector -->
+    <header class="theme-card p-6 rounded-3xl flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 border">
       <div class="flex items-center gap-4">
-        <div class="p-3.5 rounded-2xl bg-gradient-to-tr from-purple-600 via-cyan-500 to-amber-500 text-white shadow-lg shadow-purple-500/40 flex items-center justify-center animate-pulse">
-          <i data-lucide="gamepad-2" class="w-8 h-8"></i>
+        <div id="headerIconBox" class="p-3.5 rounded-2xl bg-amber-500 text-black shadow-lg flex items-center justify-center animate-pulse">
+          <i data-lucide="compass" class="w-8 h-8"></i>
         </div>
         <div>
-          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black font-gaming tracking-wider rgb-gradient-text uppercase">
+          <h1 id="dashboardMainTitle" class="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight uppercase" style="color: var(--accent-primary);">
             Dropout Summary MIS Dashboard
           </h1>
           <p class="text-xs sm:text-sm text-slate-300 font-semibold mt-0.5 flex items-center gap-2">
-            <span class="inline-block w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
-            Battle Arena Edition &bull; Live Google Sheets Sync &bull; Automated 6-Report Engine
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span id="activeThemeBadge">Theme 1: Moonlit Pirate Galleon</span> &bull; 6 Core Automated MIS Reports
           </p>
         </div>
       </div>
 
-      <!-- Quick Action Buttons -->
+      <!-- TOP RIGHT CONTROLS: 6-SAMPLE THEME SWITCHER + ACTIONS -->
       <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-        <button id="syncBtn" onclick="syncLiveGoogleSheet()" class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-cyan-500/50 text-xs sm:text-sm font-bold tracking-wider text-cyan-300 transition shadow-lg flex-1 sm:flex-none">
+        <!-- 6 Custom Presets Dropdown -->
+        <div class="relative flex-1 sm:flex-none">
+          <label class="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">Switch Theme Preset</label>
+          <select id="themeSelector" onchange="switchThemePreset(this.value)" class="theme-select text-xs sm:text-sm rounded-xl px-3.5 py-2.5 cursor-pointer outline-none w-full">
+            <option value="pirateShip">1. 🏴‍☠️ Moonlit Pirate Galleon (Gold & Navy)</option>
+            <option value="bmwPower">2. 🏎️ BMW M-Power (Red Smoke & Black)</option>
+            <option value="lamboThunder">3. ⚡ Lamborghini Lightning (Red Storm)</option>
+            <option value="tirangaIndian">4. 🇮🇳 Tiranga Indian Clouds (Tricolor)</option>
+            <option value="rollsRoycePink">5. 👑 Rolls-Royce Neon (Velvet & Pink)</option>
+            <option value="rollsRoyceDiamond">6. 💎 Rolls-Royce Diamond (Teal Crystal)</option>
+          </select>
+        </div>
+
+        <button id="syncBtn" onclick="syncLiveGoogleSheet()" class="mt-4 sm:mt-0 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-slate-700 text-xs sm:text-sm font-bold text-slate-200 transition shadow">
           <i data-lucide="refresh-cw" id="syncIcon" class="w-4 h-4 text-cyan-400"></i>
-          <span>AUTO-FETCH SHEET</span>
+          <span>Auto-Fetch</span>
         </button>
-        <button onclick="scrollToEmailSection()" class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl gamer-btn-primary text-xs sm:text-sm font-black tracking-widest uppercase transition flex-1 sm:flex-none">
+
+        <button onclick="scrollToEmailSection()" class="mt-4 sm:mt-0 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl theme-btn-primary text-xs sm:text-sm font-black transition">
           <i data-lucide="mail" class="w-4 h-4"></i>
-          <span>Executive Dispatch</span>
+          <span>Dispatch Mail</span>
         </button>
       </div>
     </header>
 
     <!-- LIVE DATA STATUS INDICATOR -->
-    <div id="liveStatus" class="gamer-card px-5 py-3 rounded-2xl border flex items-center justify-between text-xs font-semibold">
+    <div id="liveStatus" class="theme-card px-5 py-3 rounded-2xl border flex items-center justify-between text-xs font-semibold">
       <div class="flex items-center gap-2.5">
-        <span class="w-3 h-3 rounded-full bg-purple-400 animate-pulse"></span>
-        <span class="text-slate-200">Connected MIS: <strong class="text-cyan-300 font-gaming tracking-wide">Dropout MIS</strong> &bull; Tab ID: <code class="text-amber-300 bg-slate-950 px-2 py-0.5 rounded border border-purple-500/30">1aJ9HhtV6caBlHbB8CtzeIX3xcrK-j5ygalxRmcdwcd0</code></span>
+        <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-200">Connected MIS Sheet: <strong style="color: var(--accent-primary);">Dropout MIS</strong> &bull; Sheet ID: <code class="text-slate-300 bg-black/50 px-2 py-0.5 rounded border border-slate-700">1aJ9HhtV6caBlHbB8CtzeIX3xcrK-j5ygalxRmcdwcd0</code></span>
       </div>
-      <span class="text-cyan-400 font-mono tracking-wider" id="lastUpdatedTime">SYNC: ACTIVE</span>
+      <span class="font-mono" style="color: var(--accent-primary);" id="lastUpdatedTime">SYNC: ACTIVE</span>
     </div>
 
     <!-- 4 HERO KPI CARDS -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="gamer-card p-5 rounded-2xl border relative overflow-hidden group">
-        <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-purple-500/20 blur-xl"></div>
+      <div class="theme-card p-5 rounded-2xl border relative overflow-hidden group">
         <div class="flex justify-between items-start">
-          <span class="text-xs uppercase font-gaming font-bold text-purple-400 tracking-wider">Total Requests</span>
-          <div class="p-2 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/40"><i data-lucide="sword" class="w-4 h-4"></i></div>
+          <span class="text-xs uppercase font-bold tracking-wider" style="color: var(--accent-primary);">Total Dropout Cases</span>
+          <div class="p-2 rounded-xl bg-black/40 border border-slate-700 text-amber-300"><i data-lucide="layers" class="w-4 h-4"></i></div>
         </div>
-        <div class="text-3xl font-black font-gaming mt-2 text-white" id="kpiTotalRows">3,081</div>
-        <p class="text-xs text-slate-400 mt-1 font-semibold">Processed from Dropout MIS</p>
+        <div class="text-3xl font-black mt-2 text-white" id="kpiTotalRows">3,081</div>
+        <p class="text-xs text-slate-400 mt-1 font-medium">Processed from Dropout MIS</p>
       </div>
 
-      <div class="gamer-card p-5 rounded-2xl border relative overflow-hidden group">
-        <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-cyan-500/20 blur-xl"></div>
+      <div class="theme-card p-5 rounded-2xl border relative overflow-hidden group">
         <div class="flex justify-between items-start">
-          <span class="text-xs uppercase font-gaming font-bold text-cyan-400 tracking-wider">MTD Volume</span>
-          <div class="p-2 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"><i data-lucide="zap" class="w-4 h-4"></i></div>
+          <span class="text-xs uppercase font-bold tracking-wider" style="color: var(--accent-primary);">MTD Volume</span>
+          <div class="p-2 rounded-xl bg-black/40 border border-slate-700 text-cyan-300"><i data-lucide="trending-up" class="w-4 h-4"></i></div>
         </div>
-        <div class="text-3xl font-black font-gaming mt-2 text-cyan-300" id="kpiMtdRefund">₹32.63 L</div>
-        <p class="text-xs text-slate-400 mt-1 font-semibold"><span id="kpiMtdCount" class="font-bold text-cyan-400">51</span> MTD Cases</p>
+        <div class="text-3xl font-black mt-2 text-white" id="kpiMtdRefund">₹32.63 L</div>
+        <p class="text-xs text-slate-400 mt-1 font-medium"><span id="kpiMtdCount" class="font-bold text-white">51</span> requests MTD</p>
       </div>
 
-      <div class="gamer-card p-5 rounded-2xl border relative overflow-hidden group">
-        <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-amber-500/20 blur-xl"></div>
+      <div class="theme-card p-5 rounded-2xl border relative overflow-hidden group">
         <div class="flex justify-between items-start">
-          <span class="text-xs uppercase font-gaming font-bold text-amber-400 tracking-wider">Pending EMI OS</span>
-          <div class="p-2 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40"><i data-lucide="shield-alert" class="w-4 h-4"></i></div>
+          <span class="text-xs uppercase font-bold tracking-wider" style="color: var(--accent-primary);">Pending EMI OS</span>
+          <div class="p-2 rounded-xl bg-black/40 border border-slate-700 text-rose-300"><i data-lucide="alert-circle" class="w-4 h-4"></i></div>
         </div>
-        <div class="text-3xl font-black font-gaming mt-2 text-amber-300" id="kpiPendingEmi">₹1.20 Cr</div>
-        <p class="text-xs text-slate-400 mt-1 font-semibold">Active Ageing 0-30, 30-60 & 60+</p>
+        <div class="text-3xl font-black mt-2 text-white" id="kpiPendingEmi">₹1.20 Cr</div>
+        <p class="text-xs text-slate-400 mt-1 font-medium">Across 0-30, 30-60 & 60+ days</p>
       </div>
 
-      <div class="gamer-card p-5 rounded-2xl border relative overflow-hidden group">
-        <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-emerald-500/20 blur-xl"></div>
+      <div class="theme-card p-5 rounded-2xl border relative overflow-hidden group">
         <div class="flex justify-between items-start">
-          <span class="text-xs uppercase font-gaming font-bold text-emerald-400 tracking-wider">Settled Total</span>
-          <div class="p-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"><i data-lucide="trophy" class="w-4 h-4"></i></div>
+          <span class="text-xs uppercase font-bold tracking-wider" style="color: var(--accent-primary);">Settled Realization</span>
+          <div class="p-2 rounded-xl bg-black/40 border border-slate-700 text-emerald-300"><i data-lucide="check-check" class="w-4 h-4"></i></div>
         </div>
-        <div class="text-3xl font-black font-gaming mt-2 text-emerald-300" id="kpiRealization">₹10.27 Cr</div>
-        <p class="text-xs text-slate-400 mt-1 font-semibold">Realized from Partners</p>
+        <div class="text-3xl font-black mt-2 text-white" id="kpiRealization">₹10.27 Cr</div>
+        <p class="text-xs text-slate-400 mt-1 font-medium">Realized from partner desks</p>
       </div>
     </div>
 
-    <!-- CHARTS ROW: STAGE AGEING & LENDER BREAKDOWN -->
+    <!-- CHARTS SECTION -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       
-      <!-- Stage Stacked Bar Chart -->
-      <div class="gamer-card p-6 rounded-3xl border flex flex-col">
+      <!-- Stage Stacked Chart -->
+      <div class="theme-card p-6 rounded-3xl border flex flex-col">
         <div class="mb-4">
-          <h3 class="text-base font-black font-gaming text-purple-300 flex items-center gap-2 uppercase tracking-wide">
-            <i data-lucide="pie-chart" class="w-4 h-4 text-purple-400"></i>
+          <h3 class="text-base font-bold text-white flex items-center gap-2 uppercase tracking-wide">
+            <i data-lucide="pie-chart" class="w-4 h-4" style="color: var(--accent-primary);"></i>
             Stage-Wise Ageing Breakdown (Report 3)
           </h3>
-          <p class="text-xs text-slate-400 font-semibold">Cases segregated into 0-30, 30-60, and 60+ days</p>
+          <p class="text-xs text-slate-400 font-medium">Cases segregated into 0-30, 30-60, and 60+ days</p>
         </div>
         <div class="relative flex-1 min-h-[280px]">
           <canvas id="stageAgeingChart"></canvas>
         </div>
       </div>
 
-      <!-- Top Lenders Volume Chart -->
-      <div class="gamer-card p-6 rounded-3xl border flex flex-col">
+      <!-- Lender Wise Volume Chart -->
+      <div class="theme-card p-6 rounded-3xl border flex flex-col">
         <div class="mb-4">
-          <h3 class="text-base font-black font-gaming text-cyan-300 flex items-center gap-2 uppercase tracking-wide">
-            <i data-lucide="landmark" class="w-4 h-4 text-cyan-400"></i>
-            Lender Wise Volume (Report 5 Unification)
+          <h3 class="text-base font-bold text-white flex items-center gap-2 uppercase tracking-wide">
+            <i data-lucide="landmark" class="w-4 h-4" style="color: var(--accent-primary);"></i>
+            Lender Wise Analysis (Report 5 Unification)
           </h3>
-          <p class="text-xs text-slate-400 font-semibold">Case volumes by Unified NBFC & Lending Partners</p>
+          <p class="text-xs text-slate-400 font-medium">Total volume sorted by unified lending partner</p>
         </div>
         <div class="relative flex-1 min-h-[280px]">
           <canvas id="lenderChart"></canvas>
@@ -222,52 +223,52 @@
 
     </div>
 
-    <!-- 6 CORE REPORTS (APPS SCRIPT LOGIC MAPPED) -->
+    <!-- 6 CORE REPORTS (APPS SCRIPT MAPPED) -->
     <div class="space-y-6">
 
       <!-- REPORT 1 & REPORT 2 (2 COLUMN GRID) -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         <!-- REPORT 1 CONTAINER -->
-        <div class="gamer-card p-5 sm:p-6 rounded-3xl border flex flex-col">
+        <div class="theme-card p-5 sm:p-6 rounded-3xl border flex flex-col">
           <div class="flex justify-between items-center mb-4">
             <div>
-              <h3 id="r1_title" class="text-sm sm:text-base font-bold font-gaming text-purple-300 flex items-center gap-2">
-                <i data-lucide="crosshair" class="w-4 h-4 text-purple-400"></i>
+              <h3 id="r1_title" class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                <i data-lucide="award" class="w-4 h-4" style="color: var(--accent-primary);"></i>
                 Report 1: MTD Top 20 Groups by Count
               </h3>
-              <p class="text-xs text-slate-400 font-semibold">1st of month to Current Date</p>
+              <p class="text-xs text-slate-400">1st of month to Current Date</p>
             </div>
-            <span class="text-xs px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 font-gaming font-bold border border-purple-500/30">MTD</span>
+            <span class="text-xs px-2.5 py-1 rounded-full font-bold uppercase border" style="background: rgba(0,0,0,0.5); color: var(--accent-primary); border-color: var(--accent-primary);">MTD</span>
           </div>
           <div class="overflow-x-auto max-h-[380px]">
             <table class="w-full text-left text-xs sm:text-sm">
-              <thead class="sticky top-0 bg-slate-950 text-purple-300 uppercase text-[11px] font-gaming border-b border-purple-500/40">
+              <thead class="sticky top-0 bg-black/90 uppercase text-[11px] border-b border-slate-700" style="color: var(--accent-primary);">
                 <tr id="r1_headers"></tr>
               </thead>
-              <tbody id="r1_body" class="divide-y divide-purple-950/60 text-slate-200"></tbody>
+              <tbody id="r1_body" class="divide-y divide-slate-800 text-slate-200"></tbody>
             </table>
           </div>
         </div>
 
         <!-- REPORT 2 CONTAINER -->
-        <div class="gamer-card p-5 sm:p-6 rounded-3xl border flex flex-col">
+        <div class="theme-card p-5 sm:p-6 rounded-3xl border flex flex-col">
           <div class="flex justify-between items-center mb-4">
             <div>
-              <h3 id="r2_title" class="text-sm sm:text-base font-bold font-gaming text-cyan-300 flex items-center gap-2">
-                <i data-lucide="clock-4" class="w-4 h-4 text-cyan-400"></i>
+              <h3 id="r2_title" class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                <i data-lucide="clock-4" class="w-4 h-4" style="color: var(--accent-primary);"></i>
                 Report 2: Top 20 Groups — Last 7 Days
               </h3>
-              <p class="text-xs text-slate-400 font-semibold">Past 7 Days Rolling Window</p>
+              <p class="text-xs text-slate-400">Past 7 Days Rolling Window</p>
             </div>
-            <span class="text-xs px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-gaming font-bold border border-cyan-500/30">7 DAYS</span>
+            <span class="text-xs px-2.5 py-1 rounded-full font-bold uppercase border" style="background: rgba(0,0,0,0.5); color: var(--accent-primary); border-color: var(--accent-primary);">7 DAYS</span>
           </div>
           <div class="overflow-x-auto max-h-[380px]">
             <table class="w-full text-left text-xs sm:text-sm">
-              <thead class="sticky top-0 bg-slate-950 text-cyan-300 uppercase text-[11px] font-gaming border-b border-cyan-500/40">
+              <thead class="sticky top-0 bg-black/90 uppercase text-[11px] border-b border-slate-700" style="color: var(--accent-primary);">
                 <tr id="r2_headers"></tr>
               </thead>
-              <tbody id="r2_body" class="divide-y divide-cyan-950/60 text-slate-200"></tbody>
+              <tbody id="r2_body" class="divide-y divide-slate-800 text-slate-200"></tbody>
             </table>
           </div>
         </div>
@@ -275,23 +276,23 @@
       </div>
 
       <!-- REPORT 3: Summary — Ageing by Stage (FULL WIDTH) -->
-      <div class="gamer-card p-5 sm:p-6 rounded-3xl border shadow-2xl">
+      <div class="theme-card p-5 sm:p-6 rounded-3xl border shadow-2xl">
         <div class="flex justify-between items-center mb-4">
           <div>
-            <h3 id="r3_title" class="text-base font-bold font-gaming text-amber-300 flex items-center gap-2">
-              <i data-lucide="layout-grid" class="w-4 h-4 text-amber-400"></i>
+            <h3 id="r3_title" class="text-base font-bold text-white flex items-center gap-2">
+              <i data-lucide="table" class="w-4 h-4" style="color: var(--accent-primary);"></i>
               Report 3: Summary — Ageing by Stage
             </h3>
-            <p class="text-xs text-slate-400 font-semibold">Cases & EMI OS segregated into 0-30, 30-60, and 60+ day buckets</p>
+            <p class="text-xs text-slate-400">Cases & EMI OS segregated into 0-30, 30-60, and 60+ day buckets</p>
           </div>
-          <span class="text-xs px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-gaming font-bold border border-amber-500/30">STAGE AGEING</span>
+          <span class="text-xs px-3 py-1 rounded-full font-bold uppercase border" style="background: rgba(0,0,0,0.5); color: var(--accent-primary); border-color: var(--accent-primary);">STAGE AGEING</span>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs sm:text-sm">
-            <thead class="bg-slate-950 text-amber-300 uppercase text-[11px] font-gaming border-b border-amber-500/40">
+            <thead class="bg-black/90 uppercase text-[11px] border-b border-slate-700" style="color: var(--accent-primary);">
               <tr id="r3_headers"></tr>
             </thead>
-            <tbody id="r3_body" class="divide-y divide-amber-950/60 text-slate-200"></tbody>
+            <tbody id="r3_body" class="divide-y divide-slate-800 text-slate-200"></tbody>
           </table>
         </div>
       </div>
@@ -300,45 +301,45 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         <!-- REPORT 4: Partial Refund Received Top 20 -->
-        <div class="gamer-card p-5 sm:p-6 rounded-3xl border flex flex-col">
+        <div class="theme-card p-5 sm:p-6 rounded-3xl border flex flex-col">
           <div class="flex justify-between items-center mb-4">
             <div>
-              <h3 id="r4_title" class="text-sm sm:text-base font-bold font-gaming text-fuchsia-300 flex items-center gap-2">
-                <i data-lucide="split" class="w-4 h-4 text-fuchsia-400"></i>
+              <h3 id="r4_title" class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                <i data-lucide="split" class="w-4 h-4" style="color: var(--accent-primary);"></i>
                 Report 4: Partial Refund Received — Top 20
               </h3>
-              <p class="text-xs text-slate-400 font-semibold">By Ageing Buckets</p>
+              <p class="text-xs text-slate-400">By Ageing Buckets</p>
             </div>
-            <span class="text-xs px-2.5 py-1 rounded-full bg-fuchsia-500/20 text-fuchsia-300 font-gaming font-bold border border-fuchsia-500/30">PARTIAL</span>
+            <span class="text-xs px-2.5 py-1 rounded-full font-bold uppercase border" style="background: rgba(0,0,0,0.5); color: var(--accent-primary); border-color: var(--accent-primary);">PARTIAL</span>
           </div>
           <div class="overflow-x-auto max-h-[380px]">
             <table class="w-full text-left text-xs sm:text-sm">
-              <thead class="sticky top-0 bg-slate-950 text-fuchsia-300 uppercase text-[11px] font-gaming border-b border-fuchsia-500/40">
+              <thead class="sticky top-0 bg-black/90 uppercase text-[11px] border-b border-slate-700" style="color: var(--accent-primary);">
                 <tr id="r4_headers"></tr>
               </thead>
-              <tbody id="r4_body" class="divide-y divide-fuchsia-950/60 text-slate-200"></tbody>
+              <tbody id="r4_body" class="divide-y divide-slate-800 text-slate-200"></tbody>
             </table>
           </div>
         </div>
 
         <!-- REPORT 6: Loan Live & Dropout Pending Top 20 -->
-        <div class="gamer-card p-5 sm:p-6 rounded-3xl border flex flex-col">
+        <div class="theme-card p-5 sm:p-6 rounded-3xl border flex flex-col">
           <div class="flex justify-between items-center mb-4">
             <div>
-              <h3 id="r6_title" class="text-sm sm:text-base font-bold font-gaming text-orange-300 flex items-center gap-2">
-                <i data-lucide="flame" class="w-4 h-4 text-orange-400"></i>
+              <h3 id="r6_title" class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                <i data-lucide="alert-triangle" class="w-4 h-4" style="color: var(--accent-primary);"></i>
                 Report 6: Loan Live & Dropout Pending — Top 20
               </h3>
-              <p class="text-xs text-slate-400 font-semibold">High priority recovery partner groups</p>
+              <p class="text-xs text-slate-400">High priority recovery partner groups</p>
             </div>
-            <span class="text-xs px-2.5 py-1 rounded-full bg-orange-500/20 text-orange-300 font-gaming font-bold border border-orange-500/30">PENDING</span>
+            <span class="text-xs px-2.5 py-1 rounded-full font-bold uppercase border" style="background: rgba(0,0,0,0.5); color: var(--accent-primary); border-color: var(--accent-primary);">PENDING</span>
           </div>
           <div class="overflow-x-auto max-h-[380px]">
             <table class="w-full text-left text-xs sm:text-sm">
-              <thead class="sticky top-0 bg-slate-950 text-orange-300 uppercase text-[11px] font-gaming border-b border-orange-500/40">
+              <thead class="sticky top-0 bg-black/90 uppercase text-[11px] border-b border-slate-700" style="color: var(--accent-primary);">
                 <tr id="r6_headers"></tr>
               </thead>
-              <tbody id="r6_body" class="divide-y divide-orange-950/60 text-slate-200"></tbody>
+              <tbody id="r6_body" class="divide-y divide-slate-800 text-slate-200"></tbody>
             </table>
           </div>
         </div>
@@ -346,45 +347,45 @@
       </div>
 
       <!-- REPORT 5: Refund Received — Lender Wise -->
-      <div class="gamer-card p-5 sm:p-6 rounded-3xl border shadow-2xl">
+      <div class="theme-card p-5 sm:p-6 rounded-3xl border shadow-2xl">
         <div class="flex justify-between items-center mb-4">
           <div>
-            <h3 id="r5_title" class="text-base font-bold font-gaming text-cyan-300 flex items-center gap-2">
-              <i data-lucide="shield-check" class="w-4 h-4 text-cyan-400"></i>
+            <h3 id="r5_title" class="text-base font-bold text-white flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4" style="color: var(--accent-primary);"></i>
               Report 5: Refund Received — Lender Wise Analysis
             </h3>
-            <p class="text-xs text-slate-400 font-semibold">All Unified NBFC & Lending Partners</p>
+            <p class="text-xs text-slate-400">All Unified NBFC & Lending Partners</p>
           </div>
-          <span class="text-xs px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-gaming font-bold border border-cyan-500/30">LENDERS</span>
+          <span class="text-xs px-3 py-1 rounded-full font-bold uppercase border" style="background: rgba(0,0,0,0.5); color: var(--accent-primary); border-color: var(--accent-primary);">LENDER MIS</span>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs sm:text-sm">
-            <thead class="bg-slate-950 text-cyan-300 uppercase text-[11px] font-gaming border-b border-cyan-500/40">
+            <thead class="bg-black/90 uppercase text-[11px] border-b border-slate-700" style="color: var(--accent-primary);">
               <tr id="r5_headers"></tr>
             </thead>
-            <tbody id="r5_body" class="divide-y divide-cyan-950/60 text-slate-200"></tbody>
+            <tbody id="r5_body" class="divide-y divide-slate-800 text-slate-200"></tbody>
           </table>
         </div>
       </div>
 
     </div>
 
-    <!-- ONE-CLICK EXECUTIVE EMAIL DISPATCH MODULE -->
-    <section id="emailSummarySection" class="gamer-card p-6 sm:p-8 rounded-3xl border shadow-2xl space-y-5">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-purple-500/20 pb-4">
+    <!-- EXECUTIVE EMAIL DISPATCH MODULE -->
+    <section id="emailSummarySection" class="theme-card p-6 sm:p-8 rounded-3xl border shadow-2xl space-y-5">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-700 pb-4">
         <div>
           <div class="flex items-center gap-2">
-            <i data-lucide="send" class="w-5 h-5 text-cyan-400"></i>
-            <h2 class="text-lg sm:text-xl font-bold font-gaming text-white uppercase tracking-wider">Daily Dropout Summary Mailer Generator</h2>
+            <i data-lucide="send" class="w-5 h-5" style="color: var(--accent-primary);"></i>
+            <h2 class="text-lg sm:text-xl font-bold text-white uppercase tracking-wider">Daily Dropout Summary Mailer Generator</h2>
           </div>
-          <p class="text-xs sm:text-sm text-slate-400 font-semibold mt-0.5">Exact HTML Email Format with Sr. No., headers (#003366) and alternate styling</p>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5 font-medium">Exact HTML Email Format with Sr. No., navy headers (#003366) and alternate styling</p>
         </div>
         <div class="flex items-center gap-2.5 w-full sm:w-auto">
-          <button onclick="copyHtmlEmail()" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-950 hover:bg-slate-900 text-xs sm:text-sm font-bold font-gaming transition border border-cyan-500/40 text-cyan-300">
-            <i data-lucide="copy" class="w-4 h-4 text-cyan-400"></i>
+          <button onclick="copyHtmlEmail()" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-950 hover:bg-slate-900 text-xs sm:text-sm font-bold transition border border-slate-700" style="color: var(--accent-primary);">
+            <i data-lucide="copy" class="w-4 h-4"></i>
             <span id="copyBtnText">COPY EMAIL HTML</span>
           </button>
-          <button onclick="openMailClient()" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl gamer-btn-primary text-xs sm:text-sm font-black transition shadow">
+          <button onclick="openMailClient()" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl theme-btn-primary text-xs sm:text-sm font-black transition">
             <i data-lucide="external-link" class="w-4 h-4"></i>
             <span>OPEN MAIL APP</span>
           </button>
@@ -396,11 +397,11 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="text-slate-300 block font-semibold mb-1">Subject Line:</label>
-            <input type="text" id="emailSubject" value="Dropout Summary Report" class="w-full bg-slate-950 border border-purple-500/40 rounded-xl px-3.5 py-2.5 text-slate-200 text-xs focus:outline-none focus:border-cyan-400 font-semibold">
+            <input type="text" id="emailSubject" value="Dropout Summary Report" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-200 text-xs focus:outline-none font-semibold">
           </div>
           <div>
             <label class="text-slate-300 block font-semibold mb-1">Recipients:</label>
-            <input type="text" id="emailTo" value="management@grayquest.com, operations@grayquest.com" class="w-full bg-slate-950 border border-purple-500/40 rounded-xl px-3.5 py-2.5 text-slate-200 text-xs focus:outline-none focus:border-cyan-400 font-semibold">
+            <input type="text" id="emailTo" value="management@grayquest.com, operations@grayquest.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-slate-200 text-xs focus:outline-none font-semibold">
           </div>
         </div>
 
@@ -413,7 +414,7 @@
 
     <!-- Footer -->
     <footer class="text-center text-xs text-slate-400 pt-4 pb-8 font-semibold tracking-wider">
-      DROPOUT SUMMARY MIS DASHBOARD &bull; CYBER BATTLE ARENA &bull; GITHUB PAGES READY
+      DROPOUT SUMMARY MIS DASHBOARD &bull; 6 THEMES CUSTOM EDITION &bull; GITHUB PAGES READY
     </footer>
 
   </div>
@@ -421,54 +422,172 @@
   <!-- COMPLETE LOGIC (ALL IN ONE) -->
   <script>
     // ══════════════════════════════════════════════════════════════════
-    // AMBIENT GLOWING EMBERS PARTICLE ENGINE
+    // 6 SAMPLE PRESETS EXACT COLOR THEMES
     // ══════════════════════════════════════════════════════════════════
-    const canvas = document.getElementById('emberCanvas');
+    const SAMPLE_THEMES = {
+      pirateShip: {
+        name: "Theme 1: Moonlit Pirate Galleon",
+        icon: "compass",
+        '--bg-main': '#060a12',
+        '--bg-card': 'rgba(10, 18, 32, 0.82)',
+        '--border-color': 'rgba(234, 179, 8, 0.4)',
+        '--accent-primary': '#eab308',
+        '--accent-glow': '0 0 25px rgba(234, 179, 8, 0.45)',
+        bgGradient: `
+          radial-gradient(circle at 50% 25%, rgba(234, 179, 8, 0.22) 0%, transparent 48%),
+          radial-gradient(circle at 20% 75%, rgba(15, 23, 42, 0.9) 0%, transparent 50%),
+          radial-gradient(circle at 80% 85%, rgba(161, 98, 7, 0.15) 0%, transparent 45%)
+        `,
+        particleColor: ['#eab308', '#fef08a', '#ca8a04', '#38bdf8']
+      },
+      bmwPower: {
+        name: "Theme 2: BMW M-Power Dark Red",
+        icon: "gauge",
+        '--bg-main': '#0a0304',
+        '--bg-card': 'rgba(26, 7, 10, 0.85)',
+        '--border-color': 'rgba(239, 68, 68, 0.45)',
+        '--accent-primary': '#ef4444',
+        '--accent-glow': '0 0 25px rgba(239, 68, 68, 0.5)',
+        bgGradient: `
+          radial-gradient(circle at 50% 15%, rgba(239, 68, 68, 0.28) 0%, transparent 50%),
+          radial-gradient(circle at 10% 80%, rgba(185, 28, 28, 0.22) 0%, transparent 45%),
+          radial-gradient(circle at 90% 80%, rgba(153, 27, 27, 0.22) 0%, transparent 45%)
+        `,
+        particleColor: ['#ef4444', '#f87171', '#dc2626', '#ffffff']
+      },
+      lamboThunder: {
+        name: "Theme 3: Lamborghini Lightning City",
+        icon: "zap",
+        '--bg-main': '#0c0205',
+        '--bg-card': 'rgba(28, 6, 12, 0.85)',
+        '--border-color': 'rgba(244, 63, 94, 0.45)',
+        '--accent-primary': '#f43f5e',
+        '--accent-glow': '0 0 25px rgba(244, 63, 94, 0.55)',
+        bgGradient: `
+          radial-gradient(circle at 75% 20%, rgba(244, 63, 94, 0.35) 0%, transparent 45%),
+          radial-gradient(circle at 25% 35%, rgba(225, 29, 72, 0.25) 0%, transparent 40%),
+          radial-gradient(circle at 50% 90%, rgba(159, 18, 57, 0.3) 0%, transparent 50%)
+        `,
+        particleColor: ['#f43f5e', '#fb7185', '#fda4af', '#facc15']
+      },
+      tirangaIndian: {
+        name: "Theme 4: Tiranga Indian Clouds",
+        icon: "flag",
+        '--bg-main': '#060f0d',
+        '--bg-card': 'rgba(10, 24, 20, 0.85)',
+        '--border-color': 'rgba(249, 115, 22, 0.45)',
+        '--accent-primary': '#f97316',
+        '--accent-glow': '0 0 25px rgba(249, 115, 22, 0.45)',
+        bgGradient: `
+          radial-gradient(circle at 50% 12%, rgba(249, 115, 22, 0.3) 0%, transparent 45%),
+          radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+          radial-gradient(circle at 50% 88%, rgba(34, 197, 94, 0.3) 0%, transparent 45%)
+        `,
+        particleColor: ['#f97316', '#ffffff', '#22c55e', '#3b82f6']
+      },
+      rollsRoycePink: {
+        name: "Theme 5: Rolls-Royce Neon Velvet",
+        icon: "sparkles",
+        '--bg-main': '#0d0413',
+        '--bg-card': 'rgba(26, 8, 38, 0.85)',
+        '--border-color': 'rgba(236, 72, 153, 0.45)',
+        '--accent-primary': '#ec4899',
+        '--accent-glow': '0 0 25px rgba(236, 72, 153, 0.5)',
+        bgGradient: `
+          linear-gradient(180deg, rgba(236, 72, 153, 0.22) 0%, transparent 40%),
+          radial-gradient(circle at 50% 40%, rgba(217, 70, 239, 0.25) 0%, transparent 50%),
+          radial-gradient(circle at 50% 95%, rgba(168, 85, 247, 0.2) 0%, transparent 50%)
+        `,
+        particleColor: ['#ec4899', '#f472b6', '#d946ef', '#ffffff']
+      },
+      rollsRoyceDiamond: {
+        name: "Theme 6: Rolls-Royce Diamond Chandelier",
+        icon: "gem",
+        '--bg-main': '#021619',
+        '--bg-card': 'rgba(4, 38, 44, 0.85)',
+        '--border-color': 'rgba(45, 212, 191, 0.45)',
+        '--accent-primary': '#2dd4bf',
+        '--accent-glow': '0 0 25px rgba(45, 212, 191, 0.5)',
+        bgGradient: `
+          radial-gradient(circle at 50% 15%, rgba(45, 212, 191, 0.3) 0%, transparent 50%),
+          radial-gradient(circle at 20% 60%, rgba(56, 189, 248, 0.2) 0%, transparent 45%),
+          radial-gradient(circle at 80% 85%, rgba(20, 184, 166, 0.25) 0%, transparent 45%)
+        `,
+        particleColor: ['#2dd4bf', '#5eead4', '#38bdf8', '#ffffff']
+      }
+    };
+
+    let activeParticleColors = SAMPLE_THEMES.pirateShip.particleColor;
+
+    function switchThemePreset(key) {
+      const theme = SAMPLE_THEMES[key];
+      if (!theme) return;
+
+      document.documentElement.style.setProperty('--bg-main', theme['--bg-main']);
+      document.documentElement.style.setProperty('--bg-card', theme['--bg-card']);
+      document.documentElement.style.setProperty('--border-color', theme['--border-color']);
+      document.documentElement.style.setProperty('--accent-primary', theme['--accent-primary']);
+      document.documentElement.style.setProperty('--accent-glow', theme['--accent-glow']);
+
+      document.body.style.backgroundImage = theme.bgGradient;
+      document.getElementById('activeThemeBadge').innerText = theme.name;
+
+      activeParticleColors = theme.particleColor;
+      resizeCanvas();
+
+      // Update Chart Colors
+      updateCharts();
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // AMBIENT PARTICLE ENGINE
+    // ══════════════════════════════════════════════════════════════════
+    const canvas = document.getElementById('ambientCanvas');
     const ctx = canvas.getContext('2d');
-    let embers = [];
+    let particles = [];
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      embers = [];
-      const numEmbers = Math.floor((canvas.width * canvas.height) / 4500);
-      for (let i = 0; i < numEmbers; i++) {
-        embers.push({
+      particles = [];
+      const num = Math.floor((canvas.width * canvas.height) / 4000);
+      for (let i = 0; i < num; i++) {
+        particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          size: Math.random() * 2 + 0.5,
-          color: ['#a855f7', '#f97316', '#00f0ff', '#fbbf24'][Math.floor(Math.random() * 4)],
-          speedY: Math.random() * 0.4 + 0.1,
-          speedX: (Math.random() - 0.5) * 0.3,
-          alpha: Math.random() * 0.7 + 0.3
+          size: Math.random() * 2 + 0.6,
+          color: activeParticleColors[Math.floor(Math.random() * activeParticleColors.length)],
+          speedY: Math.random() * 0.35 + 0.08,
+          speedX: (Math.random() - 0.5) * 0.25,
+          alpha: Math.random() * 0.8 + 0.2
         });
       }
     }
 
-    function drawEmbers() {
+    function drawParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      embers.forEach(e => {
+      particles.forEach(p => {
         ctx.beginPath();
-        ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
-        ctx.fillStyle = e.color;
-        ctx.globalAlpha = e.alpha;
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = e.color;
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = p.color;
         ctx.fill();
 
-        e.y -= e.speedY;
-        e.x += e.speedX;
-        if (e.y < 0) e.y = canvas.height;
-        if (e.x < 0) e.x = canvas.width;
-        if (e.x > canvas.width) e.x = 0;
+        p.y -= p.speedY;
+        p.x += p.speedX;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
       });
       ctx.globalAlpha = 1;
-      requestAnimationFrame(drawEmbers);
+      requestAnimationFrame(drawParticles);
     }
 
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
-    drawEmbers();
+    drawParticles();
 
     // ══════════════════════════════════════════════════════════════════
     // SCRIPT LOGIC (MAPPED EXACTLY AS PER GOOGLE APPS SCRIPT)
@@ -789,14 +908,14 @@
       document.getElementById(`r${repNum}_title`).innerHTML = `<i data-lucide="crosshair" class="w-4 h-4"></i> ${rep.title}`;
       
       const headEl = document.getElementById(`r${repNum}_headers`);
-      headEl.innerHTML = rep.headers.map((h, i) => `<th class="py-2.5 px-3 font-bold font-gaming ${i===0 ? 'text-left' : 'text-center'} whitespace-nowrap">${h}</th>`).join('');
+      headEl.innerHTML = rep.headers.map((h, i) => `<th class="py-2.5 px-3 font-bold ${i===0 ? 'text-left' : 'text-center'} whitespace-nowrap">${h}</th>`).join('');
 
       const bodyEl = document.getElementById(`r${repNum}_body`);
       bodyEl.innerHTML = rep.dataRows.map((row, rowIdx) => {
         const isTotal = rowIdx === rep.dataRows.length - 1;
-        const bgStyle = isTotal ? 'bg-purple-950/80 font-black text-amber-300 font-gaming shadow-inner' : (rowIdx % 2 === 1 ? 'bg-slate-950/40' : '');
+        const bgStyle = isTotal ? 'bg-black/80 font-black text-amber-300 shadow-inner' : (rowIdx % 2 === 1 ? 'bg-slate-900/30' : '');
         return `
-          <tr class="hover:bg-purple-900/30 transition ${bgStyle}">
+          <tr class="hover:bg-slate-800/40 transition ${bgStyle}">
             ${row.map((cell, i) => `<td class="py-2 px-3 ${i===0 ? 'text-left font-bold text-slate-100' : 'text-center font-mono text-slate-300'}">${cell}</td>`).join('')}
           </tr>
         `;
@@ -806,6 +925,7 @@
     function updateCharts() {
       const rep3 = currentReports[2];
       const rep5 = currentReports[4];
+      const primaryAccent = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim() || '#eab308';
 
       // Stage Stacked Chart
       const sCtx = document.getElementById('stageAgeingChart').getContext('2d');
@@ -821,20 +941,20 @@
         data: {
           labels: stageLabels,
           datasets: [
-            { label: '0-30 Days', data: c0_30, backgroundColor: '#00f0ff', borderRadius: 4 },
+            { label: '0-30 Days', data: c0_30, backgroundColor: primaryAccent, borderRadius: 4 },
             { label: '30-60 Days', data: c30_60, backgroundColor: '#f59e0b', borderRadius: 4 },
-            { label: '60+ Days', data: c60_plus, backgroundColor: '#a855f7', borderRadius: 4 }
+            { label: '60+ Days', data: c60_plus, backgroundColor: '#ef4444', borderRadius: 4 }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           scales: {
-            x: { stacked: true, grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#cbd5e1', font: { family: 'Rajdhani', weight: 'bold' } } },
+            x: { stacked: true, grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#cbd5e1', font: { weight: 'bold' } } },
             y: { stacked: true, grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#cbd5e1' } }
           },
           plugins: {
-            legend: { labels: { color: '#e2e8f0', font: { family: 'Rajdhani', size: 12, weight: 'bold' } } }
+            legend: { labels: { color: '#e2e8f0', font: { size: 12, weight: 'bold' } } }
           }
         }
       });
@@ -851,7 +971,7 @@
           datasets: [{
             label: 'Cases Count',
             data: lenders.map(l => l[1].count),
-            backgroundColor: '#a855f7',
+            backgroundColor: primaryAccent,
             borderRadius: 6
           }]
         },
@@ -859,7 +979,7 @@
           responsive: true,
           maintainAspectRatio: false,
           scales: {
-            x: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#cbd5e1', maxRotation: 45, minRotation: 45, font: { family: 'Rajdhani', weight: 'bold' } } },
+            x: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#cbd5e1', maxRotation: 45, minRotation: 45, font: { weight: 'bold' } } },
             y: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#cbd5e1' } }
           },
           plugins: {
